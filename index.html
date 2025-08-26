@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html lang="nl">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Checklist Eurocars</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+    body { font-family: Arial, sans-serif; padding: 1em; background: #f2f2f2; }
+    h1 { text-align: center; }
+    .checklist-item { background: #fff; padding: 1em; margin-bottom: 1em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    label { display: block; margin-bottom: 0.5em; font-weight: bold; }
+    select, input[type="file"], input[type="text"] { margin-top: 0.5em; width: 100%; }
+    button { padding: 1em; font-size: 1em; background: #007BFF; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+<h1>Checklist Eurocars</h1>
+<form id="checklistForm">
+<div class="checklist-item">
+<label for="step1">Stap 1. Maak een foto van de km-stand en tankinhoud. Foto is verplicht.</label>
+<input accept="image/*" capture="environment" id="step1_photo" type="file"/>
+</div>
+<div class="checklist-item">
+<label for="step2">Stap 2. Is het exterieur vies. Ja maak een foto. Nee foto niet nodig.</label>
+<input accept="image/*" capture="environment" id="step2_photo" type="file"/>
+<select id="step2_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step3">Stap 3. Is het interieur vies. Ja maak een foto. Nee foto niet nodig.</label>
+<input accept="image/*" capture="environment" id="step3_photo" type="file"/>
+<select id="step3_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step4">Stap 4 Is het onderhoudsboekje aanwezig. Ja maak een foto. Nee foto niet nodig.</label>
+<input accept="image/*" capture="environment" id="step4_photo" type="file"/>
+<select id="step4_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step5">Stap 5 Is het instructieboekje aanwezig. Ja maak een foto. Nee foto niet nodig.</label>
+<input accept="image/*" capture="environment" id="step5_photo" type="file"/>
+<select id="step5_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step6">Stap 6 Is het kentekenbewijs aanwezig. Ja maak een foto (alleen van de voorzijde). Nee foto niet nodig.</label>
+<input accept="image/*" capture="environment" id="step6_photo" type="file"/>
+<select id="step6_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step7">Stap 7 Is een krik aanwezig. Ja of Nee.</label>
+<select id="step7_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step8">Stap 8 is een bandenreparatieset aanwezig. Ja of Nee.</label>
+<select id="step8_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step9">Stap 9 is een reservewiel aanwezig. Ja of Nee.</label>
+<select id="step9_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step10">Stap 10. Is er een thuislader aanwezig? Ja, Nee of niet van toepassing.</label>
+<select id="step10_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step11">Stap 11. Is er een HV-lader aanwezig? Ja, Nee of niet van toepassing.</label>
+<select id="step11_answer">
+<option value="">Selecteer</option>
+<option value="Ja">Ja</option>
+<option value="Nee">Nee</option>
+</select>
+</div>
+<div class="checklist-item">
+<label for="step12">Stap 12. Maak een foto van de laadruimte/kofferbak. Foto is verplicht.</label>
+<input accept="image/*" capture="environment" id="step12_photo" type="file"/>
+</div>
+<div class="checklist-item">
+<label for="step13">Stap 13. Maak een foto van de dakplaat. Foto is verplicht. (Dit is om eventuele transportschade vast te leggen)</label>
+<input accept="image/*" capture="environment" id="step13_photo" type="file"/>
+</div>
+<button onclick="generatePDF()" type="button">Checklist opslaan als PDF</button>
+</form>
+<script>
+    async function generatePDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(14);
+      doc.text("Checklist Eurocars", 20, 20);
+      let y = 30;
+
+      for (let i = 1; i <= 13; i++) {
+        const label = document.querySelector('label[for="step' + i + '"]').innerText;
+        let answer = "";
+        const select = document.getElementById("step" + i + "_answer");
+        if (select) answer = select.value;
+
+        doc.text(label, 20, y);
+        y += 8;
+        if (answer) {{
+          doc.text("Antwoord: " + answer, 20, y);
+          y += 8;
+        }}
+      }
+
+      doc.save("Checklist-Eurocars.pdf");
+    }
+  </script>
+<script>
+function togglePhotoUpload(selectElement) {
+    const photoInput = selectElement.parentElement.querySelector('.conditional-photo');
+    if (selectElement.value === "Ja") {
+        photoInput.style.display = "block";
+        photoInput.required = true;
+    } else {
+        photoInput.style.display = "none";
+        photoInput.required = false;
+    }
+}
+</script></body>
+</html>
